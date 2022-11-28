@@ -7,6 +7,7 @@ use App\Repository\AccessRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -26,17 +27,19 @@ class LoginController extends AbstractController
     }
 
     #[Route('/login', name: 'app_login', methods: ['POST'])]
-    public function login(Request $req, ManagerRegistry $doc, AccessRepository $access): Response
+    public function login(Request $request, RequestStack $requestStack, ManagerRegistry $doc, AccessRepository $access): Response
     {
-        $password = $req->get('password');
+        $session = $requestStack->getSession();
+        $password = $request->get('password');
         $db_pass = $access->findOneBy(['password' => $password]);
 
-        if (strlen($req->get('password')) < 8) {
+        if (strlen($request->get('password')) < 8) {
             return new RedirectResponse('/?error=small_password');
         }
 
         if ($db_pass) {
-            return new Response($req->get('password'));
+            $session->set('login', true);
+            return new RedirectResponse('/todolist');
         }
 
         $manager = $doc->getManager();
@@ -47,14 +50,18 @@ class LoginController extends AbstractController
         $manager->persist($new_access);
         $manager->flush();
 
-        return new Response($new_access->getId());
+        $session->set('login', true);
 
+        return new RedirectResponse('/todolist');
     }
 
-    #[Route('/logout', name: 'app_logout', methods: ['GET', 'POST'])]
-    public function logout(): Response
+    #[Route('/logout', name: 'app_logout', methods: ['GET'])]
+    public function logout(RequestStack $requestStack): Response
     {
-        return new Response('logout');
+        $session = $requestStack->getSession();
+        $session->remove('login');
+
+        return new RedirectResponse('/');
     }
 }
 
