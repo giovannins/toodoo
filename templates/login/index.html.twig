@@ -15,11 +15,15 @@
 		<div class="uk-card uk-card-default uk-card-body">
 			<div class="uk-card-header">
 				<h3 class="uk-card-title">
-					Bem-vindo ao {{app_name}}.
+					Bem-vindo ao
+					{{app_name}}.
 				</h3>
 			</div>
 			<div class="uk-card-body">
 				<form action="/login" method="post">
+					{% if error %}
+						<p class="uk-article-meta uk-text-danger">Sua senha não é válida.</p>
+					{% endif %}
 					<label for="password">
 						<div class="uk-inline">
 							<span class="uk-form-icon">
@@ -29,7 +33,6 @@
 						</div>
 					</label>
 					<p class="uk-article-meta">Sua senha tem que ter no minímo de 8 caracteres</p>
-
 					<input type="submit" value="Login" class="uk-button uk-button-primary">
 				</form>
 			</div>
