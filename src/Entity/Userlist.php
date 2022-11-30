@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\UserlistRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UserlistRepository::class)]
@@ -17,11 +16,8 @@ class Userlist
     #[ORM\ManyToOne(inversedBy: 'userlists')]
     private ?Access $access_id = null;
 
-    #[ORM\Column(type: Types::ARRAY)]
-    private array $todolist = [];
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $created_at = null;
+    #[ORM\Column(length: 255)]
+    private ?string $todo = null;
 
     public function getId(): ?int
     {
@@ -40,26 +36,14 @@ class Userlist
         return $this;
     }
 
-    public function getTodolist(): array
+    public function getTodo(): ?string
     {
-        return $this->todolist;
+        return $this->todo;
     }
 
-    public function setTodolist(array $todolist): self
+    public function setTodo(string $todo): self
     {
-        $this->todolist = $todolist;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeInterface
-    {
-        return $this->created_at;
-    }
-
-    public function setCreatedAt(\DateTimeInterface $created_at): self
-    {
-        $this->created_at = $created_at;
+        $this->todo = $todo;
 
         return $this;
     }
