@@ -34,11 +34,14 @@ class LoginController extends AbstractController
         $db_pass = $access->findOneBy(['password' => $password]);
 
         if (strlen($request->get('password')) < 8) {
+
             return new RedirectResponse('/?error=small_password');
         }
 
         if ($db_pass) {
             $session->set('login', true);
+            $session->set('id', $db_pass->getId());
+
             return new RedirectResponse('/todolist');
         }
 
@@ -51,6 +54,7 @@ class LoginController extends AbstractController
         $manager->flush();
 
         $session->set('login', true);
+        $session->set('id', $new_access->getId());
 
         return new RedirectResponse('/todolist');
     }
@@ -60,9 +64,8 @@ class LoginController extends AbstractController
     {
         $session = $requestStack->getSession();
         $session->remove('login');
+        $session->remove('id');
 
         return new RedirectResponse('/');
     }
 }
-
-
