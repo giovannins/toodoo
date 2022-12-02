@@ -16,7 +16,6 @@ class TodolistController extends AbstractController
     {
         $session = $requestStack->getSession();
         $todo = $userlistRepository->findBy(['access_id' => $session->get('id')]);
-        // dd($todo);
         if ($session->get('login')) {
             return $this->render('todolist/index.html.twig', [
                 'app_name' => $_ENV['APP_NAME'],
@@ -28,5 +27,8 @@ class TodolistController extends AbstractController
         return new RedirectResponse('/');
     }
 
-    
+    #[Route('/delete/{id}', name: 'todolist_delete', methods: ['DELETE'])]
+    public function delete(RequestStack $requestStack, int $id) {
+
+    }
 }
