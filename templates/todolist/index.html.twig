@@ -1,11 +1,55 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
+	{{id}}
+	|
 	{{app_name}}
 	| Todo-List
 {% endblock %}
 
 {% block body %}
-    {% include "navigation.html.twig" %}
-	<h1>Hello, world</h1>
+
+	{% include "navigation.html.twig" %}
+
+	<div class="uk-flex uk-flex-middle uk-flex-column">
+
+		<a class="uk-button uk-button-primary" href="#">
+			<i class="fas fa-plus"></i>
+			Criar afazer
+		</a>
+
+		{% if todo %}
+
+			<div>
+				<table class="uk-table">
+					<thead>
+						<tr>
+							<th>Afazer</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for item in todo %}
+							<tr>
+								<td>{{item.todo}}</td>
+								<td>
+									<a class="uk-button uk-button-small uk-button-danger" href="/deletar/{{item.id}}">
+										<i class="fas fa-x"></i>
+									</a>
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+
+		{% else %}
+
+			<h2>Não encontramos nenhum afazer em seu perfil</h2>
+			<img data-src="/img/notfoundtodo.webp" width="30%" height="30%" alt="" uk-img/>
+
+		{% endif %}
+
+	</div>
+
 {% endblock %}
